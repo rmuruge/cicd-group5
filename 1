@@ -6,11 +6,9 @@ jenkins_path: /usr/local/lib/jenkins
 jekins_version: stable
 
 jenkins_plugins:
-  git:
-    name: 'git'
-  github:
-    name: 'github'
-
-
+- git
+- github
+- docker
+- maven-plugin
 
 jenkins_state: started

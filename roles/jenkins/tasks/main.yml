@@ -15,7 +15,8 @@
     - git
     - texlive-latex
     - wget
-    - deltarpm    
+    - deltarpm
+    - maven    
 - name: Download jenkins repo
   command: wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/{{ jenkins_version }}/jenkins.repo
 - name: Import Jenkins CI key
@@ -51,3 +52,18 @@
 - name: Print init Password
   debug:
     var: result.stdout
+- name: install jenkins cli
+  get_url:
+    url: "{{ jenkins_url }}/jnlpJars/jenkins-cli.jar"
+    dest: "{{ jenkins_path }}/jenkins-cli.jar"
+  when: jenkins_state != "stopped"
+#- name: Install plugins without a specific version
+#  jenkins_plugin:
+#    name: "{{ item.name }}"
+#  register: my_jenkins_plugin_unversioned
+#  with_dict: "{{ vars[jenkins_plugins] }}"
+# name: install Jenkins plugins
+#  shell: wget http://updates.jenkins-ci.org/latest/"{{ item }}".hpi
+#  shell: chmod -R 777 *
+#  shell: java -jar "{{ jenkins_path }}"/jenkins-cli.jar -s "{{ jenkins_url }}" -auth admin:admin install-plugin "{{ item }}" -deploy -restart
+#  with_items: "{{ jenkins_plugins }}"
