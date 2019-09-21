@@ -1,2 +1,3 @@
 # cicd-group5
-# cicd-group5
+
+Repository created for Playbooks and CI CD automation
