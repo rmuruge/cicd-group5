@@ -1,0 +1,3 @@
+---
+# vars file for jenkins
+jenkins_version: redhat-stable

@@ -1,0 +1,53 @@
+# tasks file for jenkins
+---
+- name: Configure jenkins vars
+  include_vars: main.yml
+- name: Update the software package repository
+  yum:
+    name: "*"
+    update_cache: yes
+- name: Install dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-1.8.0-openjdk
+    - git
+    - texlive-latex
+    - wget
+    - deltarpm    
+- name: Download jenkins repo
+  command: wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/{{ jenkins_version }}/jenkins.repo
+- name: Import Jenkins CI key
+  rpm_key:
+    key: https://pkg.jenkins.io/{{ jenkins_version  }}/jenkins.io.key
+    state: present
+- name: Install Jenkins
+  yum:
+    name: "jenkins"
+    state: present
+- name: Allow port 8080
+  shell: iptables -I INPUT -p tcp --dport 8080 -m state --state NEW,ESTABLISHED -j ACCEPT
+- name: Start jenkins
+  service:
+    name: jenkins
+    state: "{{ jenkins_state }}"
+- name: Enable Jenkins
+  systemd:
+    name: jenkins
+    enabled: true
+- name: create jenkins-cli path
+  file:
+    path: "{{ jenkins_path }}/"
+    state: directory
+- name: sleep 30 secs
+  wait_for: timeout=30
+  delegate_to: localhost
+- name: Get Admin Password
+  become: yes
+  become_method: sudo
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: result
+- name: Print init Password
+  debug:
+    var: result.stdout

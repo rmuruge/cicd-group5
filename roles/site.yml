@@ -1,0 +1,7 @@
+---
+- hosts: myansible
+  become: yes
+
+  roles:
+    - common
+    - jenkins
