@@ -1,0 +1,36 @@
+---
+- name: Install Sonatype Nexus 3
+  gather_facts: No
+  hosts: artifactory
+  become: true
+
+  vars:
+    service_account_email: " "
+    credentials_file: " " 
+    project_id: tcs-hackathon-group-5
+
+  tasks:
+
+    - name: Install dependencies
+      become: true
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - docker 
+        - docker-compose
+      notify:
+        - start docker 
+
+    - name: Move existing sonatype working directory into specified working dir
+      command: chmod  /usr/share/sonatype-work /var/nexus
+      when: s_w.stat.exists
+
+    - name: Copy docker-compose.yml to /tmp
+      template: src=nexus-docker-compose.yml dest=/tmp
+
+    - name: Run docker-compose
+      docker_compose:
+        project_src: /tmp
+        files:
+          - nexus-docker-compose.yml

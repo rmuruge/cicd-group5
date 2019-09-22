@@ -1,0 +1,16 @@
+---
+# handlers file for common
+
+- name: 'start nexus'
+  become: true
+  service: name=nexus state=started
+
+- name: 'start docker'
+  service: 
+    namer: docker
+    state: started
+  become: true
+
+- name: 'restart nexus'
+  become: true
+  service: name=nexus state=restarted
