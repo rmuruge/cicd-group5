@@ -1,0 +1,10 @@
+---
+- name: Install Sonatype Nexus 3
+  gather_facts: No
+  hosts: artifactory
+  become: true
+
+  vars:
+    service_account_email: " "
+    credentials_file: " " 
+    project_id: tcs-hackathon-group-5
