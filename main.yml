@@ -1,33 +1,24 @@
 ---
-
+#
 # commentted to test only nexus
 #
-#- hosts: local
-#  roles:
-#.    - jenkins
-
-- hosts: artifactory
-#  environment:
-#    PYTHONPATH: "/usr/lib/python2.7/site-packages"
-  roles:
-    - common
-    - dockers
-    - sonarqube
-    - nexus3
 #
-#- hosts: sonarqube
+- hosts: cicd_new
+  roles:
+#    - common
+    - ansible
+#    - jenkins
+#    - sonarscanner
+
+#- hosts: artifactory_new
 #  roles:
+#    - common
+#    - dockers
 #    - sonarqube
 #    - nexus3
-#
-- hosts: cicd
-  roles:
-    - common
-    - jenkins
-    - sonarscanner
 
-- hosts: testing
-  roles:
-    - common
-    - dockers
+#- hosts: testing_new
+#  roles:
+#    - common
+#    - dockers
 #

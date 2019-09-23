@@ -1,2 +1,16 @@
 ---
 # handlers file for common
+#
+#
+- name: 'Start Docker service'
+  become: true
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: 'change sock permission'
+  become: true
+  file:
+    path: /var/run/docker.sock
+    mode: 0666

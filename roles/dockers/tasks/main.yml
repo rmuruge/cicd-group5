@@ -5,7 +5,7 @@
       get_url:
         url: https://download.docker.com/linux/centos/docker-ce.repo
         dest: /etc/yum.repos.d/docer-ce.repo
-      become: yes
+      become: true
 
     - name: Enable Docker Edge repo
       ini_file:
@@ -13,7 +13,7 @@
         section: 'docker-ce-edge'
         option: enabled
         value: 0
-      become: yes
+      become: true
 
     - name: Enable Docker Test repo
       ini_file:
@@ -21,20 +21,22 @@
         section: 'docker-ce-test'
         option: enabled
         value: 0
-      become: yes
+      become: true
 
     - name: Install Docker
       package:
         name: docker-ce
         state: latest
-      become: yes
+      become: true
+      notify: 
+        - Start Docker service
 
     - name: Start Docker service
       service:
         name: docker
         state: started
         enabled: yes
-      become: yes
+      become: true
 
     - name: post to con
       shell: "sudo curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose"
@@ -44,6 +46,29 @@
 
     - name: chk
       shell: "docker-compose --version"
+ 
+#    - name: Update docker daemon.jason for insecure repositories
+#      become: true
+#      blockinfile:  
+#        path: /etc/docker/daemon.json
+#        create: yes
+#        block: |
+#          {
+#            "insecure-registries" : ["{{ var_nexus_instance }}"]
+#          }
+#      notify: 
+#        - Start Docker service
+#        - change sock permission
 
+ #   - name: Wait for Docker to finish starting
+ #     wait_for:
+ #       sleep: 60
+  
+    - name: Change docker.sock permission
+      become: true
+      file:
+        path: /var/run/docker.sock
+        mode: 0666
+#
 #    - name: Initialize Docker Login for Jenkins
 #      command: docker login -u {{ docker_login_nexus_user }} -p {{ docker_login_nexus_password }} {{ nexus3_repository }}

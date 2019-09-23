@@ -1,0 +1,77 @@
+#! /bin/bash
+
+
+
+#
+# Variables
+#
+
+
+#
+# Functions
+#
+
+mainmenu () {
+ clear
+ (
+   echo "This script will attempt to create end-end environment"
+   echo "Make sure your have following before executing this script"
+   echo "  1. One CICD Instance for:"
+   echo "       a. Jenkins"
+   echo "       b. Docker"
+   echo "       c. Git"
+   echo "       d. Ansible"
+   echo "       e. Sonar Scanner"
+   echo "  2. One Artifactory Instance for:"
+   echo "       a. Nexus 3"
+   echo "       b. SonarQube Server"
+   echo "  3.  One Test Instance for:"
+   echo "       a. Docker"
+   echo "       b. Application Containers"
+   echo "  4.  One Production Instance for:"
+   echo "       a. Docker"
+   echo "       b. Application Containers"
+   echo ""
+   echo ""
+ )
+ read -n 1 -r -p "Confirm if you have all the VMs created and online [Y/n] : " mainmenuinput
+ if [[ "$mainmenuinput" = "Y" ||  "$mainmenuinput" = "y" ]]; then
+    run
+ elif [[  "$mainmenuinput" = "N" ||  "$mainmenuinput" = "n" ]]; then
+    echo "Create instance and try again."
+    exit 0
+ else
+    clear
+    mainmenu
+ fi
+}
+
+run () {
+
+   echo ""
+   echo ""
+   echo "Running ansible-playbook <default main.yml>"
+   echo ""
+  if [ -f main.yml ]; then
+     ansible-playbook main.yml 
+  else
+     read -n 1 -p "Enter a playbook yml file: " ymlfile 
+    if [ -f $ymlfile ]; then
+     ansible_playbook $ymlfile
+    else
+       echo "Could not find the yaml. Verify the path and try again."
+    fi
+  fi   
+
+}
+
+
+#
+# Scripts Body
+#
+#
+
+mainmenu
+
+
+

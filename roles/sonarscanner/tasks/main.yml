@@ -7,6 +7,8 @@
     src: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.1.0.1829-linux.zip
     dest: /tmp
     remote_src: yes
+  with_items:
+    - unzip
 
 # sonar-scanner-4.1.0.1829-linux
 #

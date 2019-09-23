@@ -1,0 +1,10 @@
+---
+# tasks file for common
+#
+
+- name: Install Ansible.
+  become: true
+  yum:
+     name: ansible
+     state: present
+     enablerepo: epel

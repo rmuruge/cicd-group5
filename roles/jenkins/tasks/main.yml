@@ -3,10 +3,12 @@
 - name: Configure jenkins vars
   include_vars: main.yml
 - name: Update the software package repository
+  become: true
   yum:
     name: "*"
     update_cache: yes
 - name: Install dependencies
+  become: true
   package:
     name: "{{ item }}"
     state: present
@@ -18,26 +20,33 @@
     - deltarpm
     - maven    
 - name: Download jenkins repo
+  become: true
   command: wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/{{ jenkins_version }}/jenkins.repo
 - name: Import Jenkins CI key
+  become: true
   rpm_key:
     key: https://pkg.jenkins.io/{{ jenkins_version  }}/jenkins.io.key
     state: present
 - name: Install Jenkins
+  become: true
   yum:
     name: "jenkins"
     state: present
 - name: Allow port 8080
+  become: true
   shell: iptables -I INPUT -p tcp --dport 8080 -m state --state NEW,ESTABLISHED -j ACCEPT
 - name: Start jenkins
+  become: true
   service:
     name: jenkins
     state: "{{ jenkins_state }}"
 - name: Enable Jenkins
+  become: true
   systemd:
     name: jenkins
     enabled: true
 - name: create jenkins-cli path
+  become: true
   file:
     path: "{{ jenkins_path }}/"
     state: directory
@@ -45,14 +54,16 @@
   wait_for: timeout=30
   delegate_to: localhost
 - name: Get Admin Password
-  become: yes
+  become: true
   become_method: sudo
   command: cat /var/lib/jenkins/secrets/initialAdminPassword
   register: result
 - name: Print init Password
+  become: true
   debug:
     var: result.stdout
 - name: install jenkins cli
+  become: true
   get_url:
     url: "{{ jenkins_url }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_path }}/jenkins-cli.jar"

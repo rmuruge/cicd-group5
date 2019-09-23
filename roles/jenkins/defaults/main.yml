@@ -1,6 +1,6 @@
 ---
 # defaults file for jenkins
-jenkins_url: 'http://35.193.133.132:8080'
+jenkins_url: 'http://localhost:8080'
 jenkins_home: /var/lib/jenkins
 jenkins_path: /usr/local/lib/jenkins
 jekins_version: stable

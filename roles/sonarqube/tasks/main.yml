@@ -12,4 +12,3 @@
 
 - name: DOCKER COMPOSE SONARQUBE LISTING PORT
   command: docker-compose -f /tmp/sonarqube-docker-compose.yml up -d
-

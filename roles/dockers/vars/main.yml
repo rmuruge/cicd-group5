@@ -1,2 +1,5 @@
 ---
 # vars file for common
+#
+
+var_nexus_instance: 10.128.0.12:8081
