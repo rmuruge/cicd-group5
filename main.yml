@@ -6,16 +6,28 @@
 #  roles:
 #.    - jenkins
 
-#- hosts: artifactory
+- hosts: artifactory
 #  environment:
 #    PYTHONPATH: "/usr/lib/python2.7/site-packages"
-#  roles:
-#    - dockers
-#    - nexus3
-
+  roles:
+    - common
+    - dockers
+    - sonarqube
+    - nexus3
+#
 #- hosts: sonarqube
-#  environment:
-#    PYTHONPATH: "/usr/lib/python3.6/site-packages"
 #  roles:
-#    - sonarquben
+#    - sonarqube
+#    - nexus3
+#
+- hosts: cicd
+  roles:
+    - common
+    - jenkins
+    - sonarscanner
+
+- hosts: testing
+  roles:
+    - common
+    - dockers
 #

@@ -4,7 +4,7 @@
 #
     - name : remove existing compose yml
       file: 
-       path: /tmp/nexus3-docker-compose.yml
+       path: "{{ nexus_download_dir }}/nexus3-docker-compose.yml"
        state: absent 
 
 #    - name: Install dependencies
@@ -17,8 +17,15 @@
 #        - docker-compose
 #
 
-    - name: Copy docker-compose.yml to /tmp
-      template: src=nexus3-docker-compose.yml dest=/tmp
+    - name: Copy docker-compose.yml to {{ nexus_download_dir }}
+      template: src=nexus3-docker-compose.yml dest={{ nexus_download_dir }}
+
+    - name: Configure docker compose 
+      replace:
+        path: "{{ nexus_download_dir }}/nexus3-docker-compose.yml"
+        regexp: 'NEXUS_PORT:8081'
+        replace: '{{ nexus_port }}:8081'
+        #state: present
     
     - name: Enable the Docker daemon in systemd
       become: true
@@ -38,14 +45,8 @@
       become: true
       command: chmod 666 /var/run/docker.sock
  
-    - name: Test docker
-      command: docker images
-
-    - name: Run Docker-Compose and Up Nexus3 on Post 8084
-      command: docker-compose -f /tmp/nexus3-docker-compose.yml up -d 
-
-    - name: Test Docker Container is up
-      command: docker ps
+    - name: Run Docker-Compose and Up Nexus3 on Post {{ nexus-port }}
+      command: docker-compose -f {{ nexus_download_dir }}/nexus3-docker-compose.yml up -d 
 
 #    - name: Run docker-compose
 #      docker_compose:

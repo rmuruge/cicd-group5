@@ -1,0 +1,26 @@
+
+version: '3'
+networks:
+  qanetwork:
+    driver: bridge
+services:
+  sonardb:
+    restart: "no"
+    image: postgres:9.6
+    ports:
+     - "5432:5432"
+    networks:
+     - qanetwork
+    environment:
+     - POSTGRES_USER=sonar
+     - POSTGRES_PASSWORD=sonar
+  sonar:
+    image: sonarqube:7.4-community
+    restart: "no"
+    networks:
+     - qanetwork
+    ports:
+     - "9000:9000"
+     - "9092:9092"
+    depends_on:
+     - sonardb

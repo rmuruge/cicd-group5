@@ -1,2 +1,52 @@
 ---
 # tasks file for common
+#
+
+    - name: Install yum package
+      become: true
+      yum:
+        name:
+          - curl-devel
+          - expat-devel
+          - gettext-devel
+          - openssl-devel
+          - zlib-devel
+          - wget
+          - gcc
+          - cpan
+          - java-1.8.0-openjdk
+
+    - name: Get git binary
+      become: true
+      unarchive:
+        src: "{{ url }}"
+        dest: "{{ temp_dir }}"
+        remote_src: yes
+      changed_when: false
+      register: result
+
+    - name: Make all git binary
+      become: true
+      make:
+        chdir: "{{ binary_dir }}"
+        target: all
+        params:
+          prefix: "{{ prefix }}"
+      changed_when: false
+
+    - name: Make install git binary
+      become: true
+      make:
+        chdir: "{{ binary_dir }}"
+        target: install
+        params:
+          prefix: "{{ prefix }}"
+      changed_when: false
+
+    - name: Remove file
+      become: true
+      file:
+        path: "{{ binary_dir }}"
+        state: absent
+      changed_when: false
+

@@ -1,0 +1,26 @@
+---
+# tasks file for common
+#
+- name: Download and Install sonar-scanner-cli
+  become: true
+  unarchive:
+    src: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.1.0.1829-linux.zip
+    dest: /tmp
+    remote_src: yes
+
+# sonar-scanner-4.1.0.1829-linux
+#
+- name: Configure Sonar Scanner with Sonar Qube Host
+  become: true
+  lineinfile:
+    dest=/tmp/sonar-scanner-4.1.0.1829-linux/conf/sonar-scanner.properties
+    line=sonar.host.url=http://10.128.0.5:9000
+    regexp=#sonar.host.url=.*
+    state=present
+
+- name: Copy sonar-scanner to /usr/share
+  become: true
+  command: mv /tmp/sonar-scanner-4.1.0.1829-linux /usr/share/sonar-scanner-4.1.0.1829
+#  copy: 
+#    src: /tmp/sonar-scanner-4.1.0.1829-linux/
+#    dest: /usr/share/sonar-scanner-4.1.0.1829

@@ -44,3 +44,6 @@
 
     - name: chk
       shell: "docker-compose --version"
+
+#    - name: Initialize Docker Login for Jenkins
+#      command: docker login -u {{ docker_login_nexus_user }} -p {{ docker_login_nexus_password }} {{ nexus3_repository }}
